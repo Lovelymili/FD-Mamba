@@ -1,0 +1,80 @@
+{
+  "name": "DSIFN-train-CDMamba",
+  "phase": "train", 
+  "gpu_ids":[0,1,2,3,4,5,6,7],
+
+  "path_cd": {
+    "log": "logs",
+    "result": "results",
+    "checkpoint": "checkpoint",
+    "resume_state": null
+  },
+
+  "datasets": {
+    "train": {
+      "name": "DSIFN",
+      "datasetroot": "/home/zhanghaoyu/datasets/DSIFNnew",
+      "resolution": 512,
+      "num_workers": 4,
+      "batch_size": 8,
+      "use_shuffle": true,
+      "data_len": -1
+    },
+    "val": {
+      "name": "DSIFN",
+      "datasetroot": "/home/zhanghaoyu/datasets/DSIFNnew",
+      "resolution": 512,
+      "num_workers": 4,
+      "batch_size": 8,
+      "use_shuffle": true,
+      "data_len": -1
+    },
+
+    "test": {
+      "name": "DSIFN",
+      "datasetroot": "/home/zhanghaoyu/datasets/DSIFNnew",
+      "resolution": 512,
+      "num_workers": 4,
+      "batch_size": 8,
+      "use_shuffle": false,
+      "data_len": -1
+    }
+  },
+
+  "model" : {
+    "name" : "cdmamba",
+    "loss" : "ce_dice",
+    "init_filters" : 16,
+    "n_classes" : 2,
+    "mode" : "AGLGF",
+    "conv_mode" : "orignal_dinner",
+    "local_query_model" : "orignal_dinner",
+    "up_mode" : "SRCM",
+    "up_conv_mode" : "deepwise",
+    "spatial_dims" : 2,
+    "in_channels" : 3,
+    "resdiual" : false,
+    "blocks_down" : [1, 2, 2, 4],
+    "blocks_up" : [1, 1, 1],
+    "diff_abs" : "later",
+    "stage" : 2,
+    "mamba_act" : "relu",
+    "norm" : ["GROUP", {"num_groups": 8}]
+  },
+
+  "train" : {
+    "n_epoch" : 300,
+    "train_print_iter" : 500,
+    "val_freq" : 1,
+    "val_print_iter" : 50,
+    "optimizer" :{
+      "type" : "adam",
+      "lr" : 8e-4
+    },
+    "sheduler" : {
+      "lr_policy" : "linear",
+      "n_step" : 3,
+      "gamma" : 0.1
+    }
+  }
+}
